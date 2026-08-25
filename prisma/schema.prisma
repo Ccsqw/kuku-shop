@@ -22,20 +22,20 @@ model user {
 }
 
 model products {
-  id            Int     @id @default(autoincrement())
-  name          String  @db.VarChar(255)
-  description   String? @db.VarChar(255)
-  price         Float?  @db.Float
-  originalPrice Float?  @db.Float
-  image         String? @db.VarChar(255)
-  images        String? @db.VarChar(255)
-  category      String? @db.VarChar(255)
-  categoryId    String? @db.VarChar(255)
-  stock         String? @db.VarChar(255)
-  rating        Float?  @db.Float
-  reviewCount   Int?
-  brand         String? @db.VarChar(255)
-  createdAt     String? @db.VarChar(255)
+  id            Int    @id @default(autoincrement())
+  name          String @db.VarChar(255)
+  description   String @db.VarChar(255)
+  price         Float  @db.Float
+  originalPrice Float  @db.Float
+  image         String @db.VarChar(255)
+  images        String @db.VarChar(255)
+  category      String @db.VarChar(255)
+  categoryId    String @db.VarChar(255)
+  stock         String @db.VarChar(255)
+  rating        Float  @db.Float
+  reviewCount   Int
+  brand         String @db.VarChar(255)
+  createdAt     String @db.VarChar(255)
 }
 
 model product_detail {
@@ -45,4 +45,15 @@ model product_detail {
   productId Int
   spec      String @db.VarChar(255)
   specValue String @db.VarChar(255)
+}
+
+model cart {
+  id        Int    @id @default(autoincrement())
+  name      String @db.VarChar(255)
+  productId Int
+  count     Int
+  price     Float  @db.Float
+  category  String @db.VarChar(255)
+  userId    Int
+  image     String @db.VarChar(255)
 }

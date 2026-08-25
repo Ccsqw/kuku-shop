@@ -10,6 +10,27 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
+  const handleLogin = async () => {
+    const response = await fetch("/api/auth/login", {
+      method: "post",
+
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+    const data = await response.json();
+    console.log("后端返回的结果", data);
+    //存储到本地存储里
+    if (data.success) {
+      sessionStorage.setItem("username", data.user.name);
+      sessionStorage.setItem("userId", data.user.id);
+      setError("");
+      router.push("/");
+    } else {
+      setError(data.message);
+    }
+  };
   return (
     <Layout>
       <div className="flex min-h-[70vh] items-center justify-center overflow-hidden">
@@ -65,7 +86,9 @@ export default function LoginPage() {
           <button
             type="button"
             // onClick={handleLogin}
+
             className="mt-8 w-full rounded-xl bg-gradient-to-r from-sky-600 to-cyan-600 py-3.5 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 outline-none ring-sky-500/40 transition hover:from-sky-500 hover:to-cyan-500 hover:shadow-sky-500/35 active:scale-[0.99]"
+            onClick={handleLogin}
           >
             登录
           </button>

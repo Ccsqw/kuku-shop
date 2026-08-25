@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { Product, ProductDetail } from "@/types";
 import { useState } from "react";
+import { addCartItems } from "@/actions/cart";
+import { useRouter } from "next/navigation";
 //mock数据
 // const IMG_THUMB = [
 //   "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&q=80",
@@ -19,6 +21,26 @@ export default function ProductDetailClient({
 }) {
   const [selectedImg, setSelectedImg] = useState(0);
   const [quality, setQuality] = useState(1);
+  const router = useRouter();
+  const addToCart = async () => {
+    //判断用户是否登录
+    if (!sessionStorage.getItem("userId")) {
+      router.push("/login");
+      return;
+    }
+    await addCartItems(
+      //暂时使用sessionStorage 的userId 作为购物车的userId
+      Number(sessionStorage.getItem("userId")),
+      product.id,
+      quality,
+      product.price || 0,
+      product.category || "",
+      product.name || "",
+      product.images?.split(",")[selectedImg] || "",
+    );
+    alert("添加成功");
+    router.push("/cart");
+  };
   return (
     <div>
       {/* 商品详细信息 */}
@@ -109,7 +131,10 @@ export default function ProductDetailClient({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <button className="flex-1 rounded-xl bg-sky-600 py-3.5 font-semibold text-white hover:bg-sky-700">
+            <button
+              className="flex-1 rounded-xl bg-sky-600 py-3.5 font-semibold text-white hover:bg-sky-700"
+              onClick={addToCart}
+            >
               加入购物车
             </button>
             <button className="flex-1 rounded-xl bg-red-600 py-3.5 font-semibold text-white hover:bg-red-700">

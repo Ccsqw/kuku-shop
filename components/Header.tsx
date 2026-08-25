@@ -1,11 +1,31 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 const navLink = "text-gray-700 hover:text-sky-600";
+
 export default function Header() {
-  const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
+  const [isLogin, setIsLogin] = useState(false);
   const [totalItems, setTotalItems] = useState(2);
+  useEffect(() => {
+    setIsLogin(sessionStorage.getItem("username") ? true : false);
+  }, []);
+  const handleLogout = async () => {
+    sessionStorage.clear();
+
+    const response = await fetch("/api/auth/logout", {
+      method: "post",
+    });
+    const data = await response.json();
+    console.log("后端返回的结果", data);
+    if (data.success) {
+      setIsLogin(false);
+      router.push("/login");
+    }
+  };
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="mx-auto max-w-6xl h-14 flex items-center px-4 gap-6">
@@ -37,7 +57,7 @@ export default function Header() {
               <Link href="/profile" className={navLink}>
                 个人中心
               </Link>
-              <button className={navLink} type="button">
+              <button className={navLink} type="button" onClick={handleLogout}>
                 退出
               </button>
             </>

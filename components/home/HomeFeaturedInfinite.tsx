@@ -2,7 +2,7 @@
 import { Product } from "@/types";
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
-import getFeaturedProducts from "@/acitons/featured";
+import getFeaturedProducts from "@/actions/featured";
 function isNearPageBottom(gap: number) {
   //找到滚动元素的对象
   const root = document.scrollingElement ?? document.documentElement;
