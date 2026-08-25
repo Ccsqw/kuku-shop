@@ -22,8 +22,25 @@ async function ProductInner({ params }: PageProps) {
         productId: Number(id),
       },
     });
-  console.log("查询到的商品信息product:", product);
-  console.log("查询到的商品详情productDetail:", productDetail);
+
+  // console.log("查询到的商品信息product:", product);
+  // console.log("查询到的商品详情productDetail:", productDetail);
+  //根据商品id查询大家的问题
+  const qaList = await prisma.question.findMany({
+    where: {
+      productId: Number(id),
+    },
+    include: {
+      //关联加载
+      answer: {
+        orderBy: { a_id: "asc" },
+      },
+    },
+    orderBy: {
+      q_id: "desc",
+    },
+  });
+  console.log("查询到的问题qaList:", qaList);
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -43,7 +60,7 @@ async function ProductInner({ params }: PageProps) {
         <ProductDetailClient
           product={product as Product}
           productDetail={productDetail as ProductDetail[]}
-          //   qaList={qaList}
+          qaList={qaList}
         />
       </div>
     </Layout>

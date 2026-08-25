@@ -3,15 +3,27 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import { getCartItems } from "@/actions/cart";
 const navLink = "text-gray-700 hover:text-sky-600";
 
 export default function Header() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
-  const [totalItems, setTotalItems] = useState(2);
+  const [totalItems, setTotalItems] = useState(0);
   useEffect(() => {
     setIsLogin(sessionStorage.getItem("username") ? true : false);
+    //获取购物车商品数量
+    const fetchTotalItems = async () => {
+      const result = await getCartItems();
+
+      if (!result.success) {
+        setTotalItems(0);
+        return;
+      } else {
+        setTotalItems(result.data?.length as number);
+      }
+    };
+    fetchTotalItems();
   }, []);
   const handleLogout = async () => {
     sessionStorage.clear();

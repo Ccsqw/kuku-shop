@@ -3,49 +3,52 @@ import Layout from "@/components/Layout";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-// import { getCartItems,deleteCartItem } from "@/actions/cart"
+
 import { CartType } from "@/types";
+import { deleteCartItem, getCartItems } from "@/actions/cart";
 export default function CartPage() {
-  const mock = [
-    {
-      id: 1,
-      name: "商品1",
-      price: 100,
-      image:
-        "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500",
-      category: "电子产品",
-      count: 1,
-    },
-    {
-      id: 2,
-      name: "商品2",
-      price: 200,
-      image:
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500",
-      category: "电子产品",
-      count: 2,
-    },
-  ];
-  const [cartItems, setCartItems] = useState<CartType[]>(mock);
+  // const mock = [
+  //   {
+  //     id: 1,
+  //     name: "商品1",
+  //     price: 100,
+  //     image:
+  //       "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500",
+  //     category: "电子产品",
+  //     count: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "商品2",
+  //     price: 200,
+  //     image:
+  //       "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500",
+  //     category: "电子产品",
+  //     count: 2,
+  //   },
+  // ];
+  const [cartItems, setCartItems] = useState<CartType[]>([]);
 
-  // const fetchCartItems = async () => {
-  //     const res: { success: boolean, data: CartType[], message: string } = await getCartItems();
-  //     console.log("结果", res)
-  //     if (res.success) {
-  //         setCartItems(res.data)
-  //     } else {
-  //         alert(res.message)
-  //     }
-  // }
+  const fetchCartItems = async () => {
+    // const res: { success: boolean; message: string; data: CartType[] } =
+    const res: { success: boolean; message: string; data: CartType[] } =
+      await getCartItems();
+    console.log("结果", res);
+    if (res.success) {
+      setCartItems(res.data);
+    } else {
+      alert(res.message);
+    }
+  };
 
-  // const handleRomoveItem=(id:number)=>{
-  //     deleteCartItem(id);
-  //     location.reload()
-  // }
+  const handleRomoveItem = (id: number) => {
+    deleteCartItem(id);
+    location.reload();
+  };
 
-  // useEffect(() => {
-  //     fetchCartItems()
-  // }, [])
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
   if (cartItems.length === 0) {
     return (
@@ -153,7 +156,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         className="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
-                        // onClick={() => handleRomoveItem(item.id)}
+                        onClick={() => handleRomoveItem(item.id)}
                       >
                         <svg
                           className="h-5 w-5"
@@ -181,6 +184,7 @@ export default function CartPage() {
                   <div className="flex justify-between">
                     <div>商品总数</div>
                     <div className="text-slate-900">
+                      {/* reduce acc 累加器 item 当前项 初始值为0 */}
                       {cartItems.reduce((acc, item) => acc + item.count, 0)}件
                     </div>
                   </div>
@@ -197,7 +201,7 @@ export default function CartPage() {
                   <div className="flex justify-between font-bold text-slate-900">
                     <span>总计</span>
                     <span className="text-rose-600">
-                      ￥
+                      {/* toLocaleString 格式化数字  */}￥
                       {cartItems
                         .reduce((acc, item) => acc + item.price * item.count, 0)
                         .toLocaleString()}

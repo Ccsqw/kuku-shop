@@ -57,3 +57,20 @@ model cart {
   userId    Int
   image     String @db.VarChar(255)
 }
+
+model answer {
+  a_id     Int      @id @default(autoincrement())
+  q_id     Int
+  content  String   @db.VarChar(255)
+  helpful  Int?
+  question question @relation(fields: [q_id], references: [q_id], onDelete: Cascade, onUpdate: Restrict, map: "que")
+
+  @@index([q_id], map: "que")
+}
+
+model question {
+  q_id      Int      @id @default(autoincrement())
+  productId Int
+  question  String?  @db.VarChar(255)
+  answer    answer[]
+}

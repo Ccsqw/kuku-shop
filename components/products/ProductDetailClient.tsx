@@ -4,6 +4,7 @@ import { Product, ProductDetail } from "@/types";
 import { useState } from "react";
 import { addCartItems } from "@/actions/cart";
 import { useRouter } from "next/navigation";
+import ProductAskEveryone from "@/components/products/ProductAskEveryone";
 //mock数据
 // const IMG_THUMB = [
 //   "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&q=80",
@@ -15,22 +16,24 @@ import { useRouter } from "next/navigation";
 export default function ProductDetailClient({
   product,
   productDetail,
+  qaList,
 }: {
   product: Product;
   productDetail: ProductDetail[];
+  qaList: any;
 }) {
   const [selectedImg, setSelectedImg] = useState(0);
   const [quality, setQuality] = useState(1);
   const router = useRouter();
   const addToCart = async () => {
-    //判断用户是否登录
+    //判断用户是否登录，只看sessionStorage是否有userId
     if (!sessionStorage.getItem("userId")) {
       router.push("/login");
       return;
     }
-    await addCartItems(
+    const result = await addCartItems(
       //暂时使用sessionStorage 的userId 作为购物车的userId
-      Number(sessionStorage.getItem("userId")),
+
       product.id,
       quality,
       product.price || 0,
@@ -38,13 +41,18 @@ export default function ProductDetailClient({
       product.name || "",
       product.images?.split(",")[selectedImg] || "",
     );
-    alert("添加成功");
+    if (!result.success) {
+      alert(result.message);
+      return;
+    }
+    alert("加购成功");
     router.push("/cart");
   };
+
   return (
     <div>
       {/* 商品详细信息 */}
-      <div className="flex flex-col lg:flex-row gap-10">
+      <div className="flex flex-col lg:flex-row gap-10 mb-10">
         <div className="lg:flex-1">
           <div className="relative aspect-square overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
             <Image
@@ -200,6 +208,8 @@ export default function ProductDetailClient({
           </div>
         </div>
       </div>
+      {/* 商品详情组件 */}
+      <ProductAskEveryone qaList={qaList} productId={Number(product.id)} />
     </div>
   );
 }
