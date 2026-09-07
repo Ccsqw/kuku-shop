@@ -16,6 +16,7 @@ export default function ProductAskEveryone({
       productId: productId,
       question: newQuestion,
     });
+    setNewQuestion("");
   };
   return (
     <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm shadow-slate-200/40 ring-1 ring-slate-100">

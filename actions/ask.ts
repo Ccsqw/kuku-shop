@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/libs/prisma";
+import { updateTag } from "next/cache";
 export async function addQuestion(question: {
   productId: number;
   question: string;
@@ -10,4 +11,5 @@ export async function addQuestion(question: {
       question: question.question,
     },
   });
+  updateTag("product");
 }

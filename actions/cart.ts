@@ -75,7 +75,7 @@ export async function getCartItems() {
       },
     });
     console.log("购物车商品数据", cartItems);
-    return { success: true, message: "获取成功", data: cartItems };
+    return { success: true, message: "获取成功", data: cartItems || [] };
   } catch (error) {
     return { success: false, message: "登录信息已过期，请重新登录" };
   }

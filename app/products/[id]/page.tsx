@@ -4,11 +4,15 @@ import { Product, ProductDetail } from "@/types";
 import Layout from "@/components/Layout";
 import Link from "next/link";
 import ProductDetailClient from "@/components/products/ProductDetailClient";
+import { cacheTag } from "next/cache";
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 async function ProductInner({ params }: PageProps) {
+  //添加缓存，带标记，保证问大家的问题能够及时展示
+  "use cache";
+  cacheTag("product");
   const { id } = await params;
   const product: Product | null = await prisma.products.findUnique({
     where: {

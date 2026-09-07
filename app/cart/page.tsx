@@ -31,11 +31,10 @@ export default function CartPage() {
 
   const fetchCartItems = async () => {
     // const res: { success: boolean; message: string; data: CartType[] } =
-    const res: { success: boolean; message: string; data: CartType[] } =
-      await getCartItems();
+    const res: any = await getCartItems();
     console.log("结果", res);
     if (res.success) {
-      setCartItems(res.data);
+      setCartItems(res.data || []);
     } else {
       alert(res.message);
     }

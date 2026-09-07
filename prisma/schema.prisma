@@ -74,3 +74,48 @@ model question {
   question  String?  @db.VarChar(255)
   answer    answer[]
 }
+
+model address {
+  id        Int     @id @default(autoincrement())
+  tag       String? @db.VarChar(255)
+  isDefault Int?    @db.TinyInt
+  name      String? @db.VarChar(255)
+  tel       String? @db.VarChar(255)
+  address   String? @db.VarChar(255)
+  userId    Int?
+}
+
+model orders {
+  id          Int           @id @default(autoincrement())
+  orderNo     String        @unique @db.VarChar(32)
+  createdAt   DateTime      @db.DateTime(0)
+  status      orders_status
+  statusLabel String        @db.VarChar(32)
+  total       Float         @db.Float
+  name        String        @db.VarChar(255)
+  spec        String        @db.VarChar(255)
+  qty         Int           @default(1)
+  price       Float         @db.Float
+  recipient   String        @db.VarChar(64)
+  address     String        @db.VarChar(255)
+  payment     String        @db.VarChar(64)
+  express     String        @db.VarChar(128)
+  userId      Int?
+}
+
+model user_timeline {
+  id     Int    @id @default(autoincrement())
+  userId Int    @default(1)
+  title  String @db.VarChar(64)
+  desc   String @db.VarChar(255)
+  time   String @db.VarChar(255)
+
+  @@index([userId])
+}
+
+enum orders_status {
+  pending
+  shipped
+  completed
+  cancelled
+}
